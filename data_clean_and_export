@@ -1,0 +1,42 @@
+"""
+Created on Wed Jan 19 11:10:00 2025
+@author: clint.stephens
+"""
+
+import pandas as pd
+import numpy as np
+
+#load file location
+filePath = 'insertfilepath/'
+fileName = 'filename.xlsm'
+
+#read the excel file
+excelFile = pd.ExcelFile(fileRoute)
+sheetList = excelFile.sheet_names
+
+#Grab as of date
+asofdate = excelFile.parse('tab', header = none)
+syear = asofdate.iat[0,1].strftime("%m_%d_%y"
+
+#split and stack
+inputmodel = asofdate.iloc[3:256,1:23].dropna().reset_index(drop=True)
+loop = np.zeros((5040, , ),dtype =object)
+count = 0
+for i in range(2,22):
+  for j in range(1,253):
+  loop[count,0] = str(i) + "-" +str9inputmodel.iloc[j,1].strftime('%Y%m%d))
+  loop[count,1] = inputmodel.iloc[0,i]
+  loop[count,2] = inputmodel.iloc[j,0]
+  loop[count,3] = format(inputmodel.iloc[j,i],'.4f')
+  count = count +1
+
+# Adding a unique ID
+specificname = pd.DataFrame({'Unique ID' : loop[:, 0],
+                                      'A' : loop[:, 1],
+                                      'B' : loop[:, 2],
+                                      'C' : loop[:, 3]})
+# Save to specific folder
+specificname.to_excel("C:filepath/filename_{}.xlsx".format(syear), index=False)
+
+# completion dialogue
+print("Operation Complete")
