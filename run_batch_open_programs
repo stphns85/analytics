@@ -1,0 +1,6 @@
+@echo off
+start "" "C:\Path\To\Program1.exe"
+timeout /t 5 /nobreak
+start "" "C:\Path\To\Program2.exe"
+timeout /t 5 /nobreak
+start "" "C:\Path\To\Program3.exe"
