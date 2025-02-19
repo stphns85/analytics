@@ -1,0 +1,66 @@
+//Author Clint Stephens
+
+// Input parameters
+input int FastSMAPeriod = 50;
+input int SlowSMAPeriod = 100;
+input double LotSize = 0.1;
+
+// Global variables
+double FastSMA, SlowSMA, FastSMA_Previous, SlowSMA_Previous;
+
+// initialization function 
+
+int OnInit()
+  {
+// Initialization code
+   return(INIT_SUCCEEDED);
+  }
+
+// Expert deinitialization function
+
+void OnDeinit(const int reason)
+  {
+// Cleanup code
+  }
+
+//Expert tick function
+
+void OnTick()
+  {
+   // Calculate the current and previous SMAs
+   FastSMA = iMA(NULL, 0, FastSMAPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
+   SlowSMA = iMA(NULL, 0, SlowSMAPeriod, 0, MODE_SMA, PRICE_CLOSE, 0);
+   FastSMA_Previous = iMA(NULL, 0, FastSMAPeriod, 0, MODE_SMA, PRICE_CLOSE, 1);
+   SlowSMA_Previous = iMA(NULL, 0, SlowSMAPeriod, 0, MODE_SMA, PRICE_CLOSE, 1);
+
+   // Check for a buy crossover
+   if (FastSMA_Previous <= SlowSMA_Previous && FastSMA > SlowSMA)
+     {
+      // Place a buy order
+      int buyTicket = OrderSend(Symbol(), OP_BUY, LotSize, Ask, 3, 0, 0, "SMA Crossover Buy", 0, 0, Blue);
+      if (buyTicket < 0)
+        {
+         Print("Error opening buy order: ", GetLastError());
+        }
+      else
+        {
+         Print("Buy order opened successfully.");
+        }
+     }
+
+   // Check for a sell crossover
+   if (FastSMA_Previous >= SlowSMA_Previous && FastSMA < SlowSMA)
+     {
+      // Place a sell order
+      int sellTicket = OrderSend(Symbol(), OP_SELL, LotSize, Bid, 3, 0, 0, "SMA Crossover Sell", 0, 0, Red);
+      if (sellTicket < 0)
+        {
+         Print("Error opening sell order: ", GetLastError());
+        }
+      else
+        {
+         Print("Sell order opened successfully.");
+        }
+     }
+  }
+//END
