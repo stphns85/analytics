@@ -1,0 +1,72 @@
+"""
+Created on Tue Aug 20 14:29:47 2024
+
+@author: clint.stephens
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import statsmodels.api as sm
+
+# Load the Excel file
+file_path = r"C:[insert file path]\Correlation_Sample.xlsx"
+df = pd.read_excel(file_path)
+
+# Select the two columns for correlation analysis
+column1 = df['Stock Price']
+column2 = df['Oil Price']
+
+# Prepare the data for multivariable regression
+X = df[['Oil Price']]
+y = df['Stock Price']
+
+# add a constant to the model (Intercept)
+
+X = sm.add_constant(X)
+
+# Fit the regression model
+model = sm.OLS(y, X).fit()
+
+# Print the regression results
+print(model.summary())
+
+if column1.isnull().any() or column2.isnull().any():
+    print("There are missing values in the data. Please handle them before analysis.")
+else:
+    # Check for constant values
+    if column1.nunique() == 1 or column2.nunique() == 1:
+        print("One of the columns has constant values, which makes correlation analysis impossible.")
+    else:
+
+        # Calculate the correlation coefficient
+        correlation = column1.corr(column2)
+
+    #Calculate the R Squared Value
+    slope, intercept, r_value, p_value, std_err = stats.linregress(column1, column2)
+    r_squared = r_value**2
+    
+    # Print the correlation coefficient
+    print(f"The correlation coefficient between Column1 and Column2 is {correlation}.")
+    print(f"The R-squared value is {r_squared}.")
+    
+# Plot the data
+plt.figure(figsize=(10, 6))
+sns.regplot(x=column2, y=column1, data=df, label='Oil Price vs Stock Price', color='blue')
+
+# Add slope-intercept equation to the plot for Oil Price vs APA Price
+slope_oil, intercept_oil, _, _, _ = stats.linregress(column2, column1)
+plt.text(0.05, 0.95, f'Stock Price = {slope_oil:.2f} * Oil Price + {intercept_oil:.2f}',
+         transform=plt.gca().transAxes, fontsize=12, verticalalignment='top', color='blue')
+
+# Add a red line with a Y intercept of 10 and a slope of 0.47
+x_vals = range(int(df['Oil Price'].min()), int(df['Oil Price'].max()))
+y_vals = [-10 + .47 * x for x in x_vals]
+plt.plot(x_vals, y_vals, color='red', linestyle='--', label='y = 10 + .47x')
+
+plt.title('Scatter Plot with Regression Lines')
+plt.xlabel('Oil Price')
+plt.ylabel('Stock Price')
+plt.legend()
+plt.show()
