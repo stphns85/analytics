@@ -1,0 +1,14 @@
+import requests
+
+# URL of the Excel file
+url = "https://www.eia.gov/dnav/ng/xls/NG_STOR_WKLY_S1_W.xls"
+
+# Send a GET request to the URL
+response = requests.get(url)
+
+# Save the content of the response as an Excel file in the My Documents folder
+file_path = r"C:\Users\<YourUsername>\Documents\NG_STOR_WKLY_S1_W.xls"
+with open(file_path, "wb") as file:
+    file.write(response.content)
+
+print("The file has been downloaded and saved to your My Documents folder.")
