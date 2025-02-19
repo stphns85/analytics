@@ -55,7 +55,7 @@ else:
 plt.figure(figsize=(10, 6))
 sns.regplot(x=column2, y=column1, data=df, label='Oil Price vs Stock Price', color='blue')
 
-# Add slope-intercept equation to the plot for Oil Price vs APA Price
+# Add slope-intercept equation to the plot for Oil Price vs Stock Price
 slope_oil, intercept_oil, _, _, _ = stats.linregress(column2, column1)
 plt.text(0.05, 0.95, f'Stock Price = {slope_oil:.2f} * Oil Price + {intercept_oil:.2f}',
          transform=plt.gca().transAxes, fontsize=12, verticalalignment='top', color='blue')
